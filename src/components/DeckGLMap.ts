@@ -1323,18 +1323,17 @@ export class DeckGLMap {
 
   private createAPTGroupsLayer(): ScatterplotLayer {
     // APT Groups - cyber threat actor markers (geopolitical variant only)
+    // Made subtle to avoid visual clutter - small orange dots
     return new ScatterplotLayer({
       id: 'apt-groups-layer',
       data: APT_GROUPS,
       getPosition: (d) => [d.lon, d.lat],
-      getRadius: 15000,
-      getFillColor: [255, 50, 50, 200] as [number, number, number, number], // Red warning color
-      radiusMinPixels: 8,
-      radiusMaxPixels: 16,
+      getRadius: 6000,
+      getFillColor: [255, 140, 0, 140] as [number, number, number, number], // Subtle orange
+      radiusMinPixels: 4,
+      radiusMaxPixels: 8,
       pickable: true,
-      stroked: true,
-      getLineColor: [255, 255, 0, 200] as [number, number, number, number], // Yellow outline
-      lineWidthMinPixels: 2,
+      stroked: false, // No outline - cleaner look
     });
   }
 
