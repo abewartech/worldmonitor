@@ -760,6 +760,16 @@ const POSTURE_THEATERS: PostureTheater[] = [
     thresholds: { elevated: 10, critical: 25 },
     strikeIndicators: { minTankers: 2, minAwacs: 1, minFighters: 8 },
   },
+  {
+    id: 'yemen-redsea-theater',
+    name: 'Yemen/Red Sea',
+    shortName: 'RED SEA',
+    targetNation: 'Yemen',
+    regions: ['yemen', 'red-sea', 'bab-el-mandeb'],
+    bounds: { north: 22, south: 11, east: 54, west: 32 },
+    thresholds: { elevated: 15, critical: 30 },
+    strikeIndicators: { minTankers: 3, minAwacs: 1, minFighters: 10 },
+  },
 ];
 
 export interface TheaterPostureSummary {

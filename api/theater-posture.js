@@ -11,7 +11,7 @@ export const config = {
 };
 
 const CACHE_TTL_SECONDS = 300; // 5 minutes
-const CACHE_KEY = 'theater-posture:v3';
+const CACHE_KEY = 'theater-posture:v4';
 
 // Theater definitions (matches client-side POSTURE_THEATERS)
 const POSTURE_THEATERS = [
@@ -86,6 +86,15 @@ const POSTURE_THEATERS = [
     bounds: { north: 33, south: 29, east: 36, west: 33 },
     thresholds: { elevated: 10, critical: 25 },
     strikeIndicators: { minTankers: 2, minAwacs: 1, minFighters: 8 },
+  },
+  {
+    id: 'yemen-redsea-theater',
+    name: 'Yemen/Red Sea',
+    shortName: 'RED SEA',
+    targetNation: 'Yemen',
+    bounds: { north: 22, south: 11, east: 54, west: 32 },
+    thresholds: { elevated: 15, critical: 30 },
+    strikeIndicators: { minTankers: 3, minAwacs: 1, minFighters: 10 },
   },
 ];
 
