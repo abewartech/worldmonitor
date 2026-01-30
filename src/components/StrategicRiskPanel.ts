@@ -265,7 +265,7 @@ export class StrategicRiskPanel extends Panel {
         </span>
         <span class="risk-source-name">${escapeHtml(source.name)}</span>
         <span class="risk-source-time">${source.status === 'no_data' ? 'no data' : timeSince}</span>
-        ${panelId && source.status !== 'fresh' ? `
+        ${panelId && (source.status === 'no_data' || source.status === 'disabled') ? `
           <button class="risk-source-enable" data-panel="${panelId}">Enable</button>
         ` : ''}
       </div>

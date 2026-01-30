@@ -47,7 +47,7 @@ export interface DataFreshnessSummary {
 
 // Thresholds in milliseconds
 const FRESH_THRESHOLD = 15 * 60 * 1000;      // 15 minutes
-const STALE_THRESHOLD = 60 * 60 * 1000;      // 1 hour
+const STALE_THRESHOLD = 2 * 60 * 60 * 1000;  // 2 hours
 const VERY_STALE_THRESHOLD = 6 * 60 * 60 * 1000; // 6 hours
 
 // Core sources needed for meaningful risk assessment
@@ -165,8 +165,8 @@ class DataFreshnessTracker {
     const sources = this.getAllSources();
     const riskSources = sources.filter(s => s.requiredForRisk);
 
-    const activeSources = sources.filter(s => s.status === 'fresh' || s.status === 'stale');
-    const activeRiskSources = riskSources.filter(s => s.status === 'fresh' || s.status === 'stale');
+    const activeSources = sources.filter(s => s.status === 'fresh' || s.status === 'stale' || s.status === 'very_stale');
+    const activeRiskSources = riskSources.filter(s => s.status === 'fresh' || s.status === 'stale' || s.status === 'very_stale');
     const staleSources = sources.filter(s => s.status === 'stale' || s.status === 'very_stale');
     const disabledSources = sources.filter(s => s.status === 'disabled');
     const errorSources = sources.filter(s => s.status === 'error');
