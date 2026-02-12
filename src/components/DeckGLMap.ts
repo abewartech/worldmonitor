@@ -1142,9 +1142,6 @@ export class DeckGLMap {
 
   private createConflictZonesLayer(): GeoJsonLayer {
     const cacheKey = 'conflict-zones-layer';
-    const cached = this.layerCache.get(cacheKey) as GeoJsonLayer | undefined;
-    // Conflict zones are static config data, so this layer is intentionally cached without dynamic invalidation.
-    if (cached) return cached;
 
     const geojsonData = {
       type: 'FeatureCollection' as const,
@@ -1169,8 +1166,6 @@ export class DeckGLMap {
       lineWidthMinPixels: 1,
       pickable: true,
     });
-
-    this.layerCache.set(cacheKey, layer);
     return layer;
   }
 
