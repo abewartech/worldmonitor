@@ -516,6 +516,8 @@ body.animations-paused *::after {
   align-content: start;
   align-items: stretch;
   min-height: 0;
+  position: relative;
+  z-index: 1; /* This ensures panels scroll UNDER the pinned map (z-index: 100) */
 }
 
 .panel {
