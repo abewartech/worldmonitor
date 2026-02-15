@@ -640,8 +640,7 @@ export class App {
       return ourPos !== Infinity && (otherPos === Infinity || ourPos <= otherPos);
     });
     if (filteredNews.length > 0) {
-      this.countryBriefPage.updateNews(filteredNews.slice(0, 5));
-      this.countryBriefPage.updateEvidence(filteredNews.slice(0, 15));
+      this.countryBriefPage.updateNews(filteredNews.slice(0, 8));
     }
 
     // Infrastructure exposure

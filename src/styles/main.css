@@ -11883,12 +11883,6 @@ body.has-critical-banner .panels-grid {
   transition: color 0.15s;
 }
 .cb-citation:hover { color: #90ccff; text-decoration: underline; }
-.cb-evidence-num {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
-  font-weight: 700;
-  margin-right: 4px;
-}
 .cb-export-menu {
   position: absolute;
   right: 0;
@@ -11983,34 +11977,7 @@ body.has-critical-banner .panels-grid {
   font-size: 11px;
 }
 
-/* Evidence Cards */
-.cb-evidence-card {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background 0.15s;
-  margin-bottom: 4px;
-}
-.cb-evidence-card:hover { background: rgba(255, 255, 255, 0.04); }
-.cb-evidence-highlight { background: rgba(100, 180, 255, 0.1); transition: background 0.3s; }
-.cb-evidence-threat {
-  width: 3px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.cb-evidence-body { flex: 1; min-width: 0; }
-.cb-evidence-title {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.4;
-  margin-bottom: 3px;
-}
-.cb-evidence-meta {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.35);
-}
+.cb-news-highlight { background: rgba(100, 180, 255, 0.12); border-color: rgba(100, 180, 255, 0.25); transition: background 0.3s, border-color 0.3s; }
 
 /* Infrastructure */
 .cb-infra-group {

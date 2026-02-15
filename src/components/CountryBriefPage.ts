@@ -294,13 +294,6 @@ export class CountryBriefPage {
                 <h3 class="cb-section-title">Top News</h3>
                 <div class="cb-news-content"></div>
               </section>
-
-              <section class="cb-section cb-markets-section">
-                <h3 class="cb-section-title">Prediction Markets</h3>
-                <div class="cb-markets-content">
-                  <span class="intel-loading-text">Loading prediction markets...</span>
-                </div>
-              </section>
             </div>
 
             <div class="cb-col-right">
@@ -316,15 +309,18 @@ export class CountryBriefPage {
                 <div class="cb-timeline-mount"></div>
               </section>
 
+              <section class="cb-section cb-markets-section">
+                <h3 class="cb-section-title">Prediction Markets</h3>
+                <div class="cb-markets-content">
+                  <span class="intel-loading-text">Loading prediction markets...</span>
+                </div>
+              </section>
+
               <section class="cb-section cb-infra-section" style="display:none">
                 <h3 class="cb-section-title">Infrastructure Exposure</h3>
                 <div class="cb-infra-content"></div>
               </section>
 
-              <section class="cb-section cb-evidence-section" style="display:none">
-                <h3 class="cb-section-title">Evidence / Sources</h3>
-                <div class="cb-evidence-content"></div>
-              </section>
             </div>
           </div>
         </div>
@@ -374,8 +370,8 @@ export class CountryBriefPage {
         if (href) {
           const el = this.overlay.querySelector(href);
           el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          el?.classList.add('cb-evidence-highlight');
-          setTimeout(() => el?.classList.remove('cb-evidence-highlight'), 2000);
+          el?.classList.add('cb-news-highlight');
+          setTimeout(() => el?.classList.remove('cb-news-highlight'), 2000);
         }
       }
     };
@@ -454,10 +450,12 @@ export class CountryBriefPage {
     const content = this.overlay.querySelector('.cb-news-content');
     if (!section || !content || headlines.length === 0) return;
 
-    const items = headlines.slice(0, 5);
+    const items = headlines.slice(0, 8);
+    this.currentHeadlineCount = items.length;
+    this.currentHeadlines = items;
     section.style.display = '';
 
-    content.innerHTML = items.map((item) => {
+    content.innerHTML = items.map((item, i) => {
       const safeUrl = sanitizeUrl(item.link);
       const threatColor = item.threat?.level === 'critical' ? '#ff4444'
         : item.threat?.level === 'high' ? '#ff8800'
@@ -471,39 +469,12 @@ export class CountryBriefPage {
           <div class="cb-news-meta">${escapeHtml(item.source)} · ${timeAgo}</div>
         </div>`;
       if (safeUrl) {
-        return `<a href="${safeUrl}" target="_blank" rel="noopener" class="cb-news-card">${cardBody}</a>`;
+        return `<a href="${safeUrl}" target="_blank" rel="noopener" class="cb-news-card" id="cb-news-${i + 1}">${cardBody}</a>`;
       }
-      return `<div class="cb-news-card">${cardBody}</div>`;
+      return `<div class="cb-news-card" id="cb-news-${i + 1}">${cardBody}</div>`;
     }).join('');
   }
 
-  public updateEvidence(headlines: NewsItem[]): void {
-    const section = this.overlay.querySelector('.cb-evidence-section') as HTMLElement | null;
-    const content = this.overlay.querySelector('.cb-evidence-content');
-    if (!section || !content || headlines.length === 0) return;
-
-    const items = headlines.slice(0, 15);
-    this.currentHeadlineCount = items.length;
-    this.currentHeadlines = items;
-
-    section.style.display = '';
-    content.innerHTML = items.map((item, i) => {
-      const safeUrl = sanitizeUrl(item.link);
-      const threatColor = item.threat?.level === 'critical' ? '#ff4444'
-        : item.threat?.level === 'high' ? '#ff8800'
-        : item.threat?.level === 'medium' ? '#ffaa00'
-        : 'rgba(255,255,255,0.3)';
-      const timeAgo = this.timeAgo(item.pubDate);
-      return `
-        <a href="${safeUrl}" target="_blank" rel="noopener" class="cb-evidence-card" id="cb-evidence-${i + 1}">
-          <div class="cb-evidence-threat" style="background:${threatColor}"></div>
-          <div class="cb-evidence-body">
-            <div class="cb-evidence-title"><span class="cb-evidence-num">[${i + 1}]</span> ${escapeHtml(item.title)}</div>
-            <div class="cb-evidence-meta">${escapeHtml(item.source)} · ${timeAgo}</div>
-          </div>
-        </a>`;
-    }).join('');
-  }
 
   public updateInfrastructure(countryCode: string): void {
     const bounds = CountryBriefPage.BRIEF_BOUNDS[countryCode];
@@ -587,7 +558,7 @@ export class CountryBriefPage {
       html = html.replace(/\[(\d{1,2})\]/g, (_match, numStr) => {
         const n = parseInt(numStr, 10);
         if (n >= 1 && n <= headlineCount) {
-          return `<a href="#cb-evidence-${n}" class="cb-citation" title="Source [${n}]">[${n}]</a>`;
+          return `<a href="#cb-news-${n}" class="cb-citation" title="Source [${n}]">[${n}]</a>`;
         }
         return `[${numStr}]`;
       });
