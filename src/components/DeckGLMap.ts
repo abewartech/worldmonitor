@@ -41,7 +41,7 @@ import { ArcLayer } from '@deck.gl/layers';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import type { WeatherAlert } from '@/services/weather';
 import { escapeHtml } from '@/utils/sanitize';
-import { debounce, rafSchedule } from '@/utils/index';
+import { debounce, rafSchedule, getCurrentTheme } from '@/utils/index';
 import {
   INTEL_HOTSPOTS,
   CONFLICT_ZONES,
@@ -126,6 +126,20 @@ const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; z
 
 const MAP_INTERACTION_MODE: MapInteractionMode =
   import.meta.env.VITE_MAP_INTERACTION_MODE === 'flat' ? 'flat' : '3d';
+
+// Theme-aware basemap tile URLs
+const DARK_TILES = [
+  'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+  'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+  'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+];
+const LIGHT_TILES = [
+  'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+  'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+  'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+];
+const DARK_BG = '#0a0f0c';
+const LIGHT_BG = '#e8f0f8';
 
 // Zoom thresholds for layer visibility and labels (matches old Map.ts)
 // Zoom-dependent layer visibility and labels
@@ -286,6 +300,14 @@ export class DeckGLMap {
     this.setupDOM();
     this.popup = new MapPopup(container);
 
+    window.addEventListener('theme-changed', (e: Event) => {
+      const theme = (e as CustomEvent).detail?.theme as 'dark' | 'light';
+      if (theme) {
+        this.switchBasemap(theme);
+        this.render(); // Rebuilds Deck.GL layers with new theme-aware colors
+      }
+    });
+
     this.initMapLibre();
 
     this.maplibreMap?.on('load', () => {
@@ -320,20 +342,20 @@ export class DeckGLMap {
 
   private initMapLibre(): void {
     const preset = VIEW_PRESETS[this.state.view];
+    const initialTheme = getCurrentTheme();
+    const initialTiles = initialTheme === 'light' ? LIGHT_TILES : DARK_TILES;
+    const initialBg = initialTheme === 'light' ? LIGHT_BG : DARK_BG;
+    const styleName = initialTheme === 'light' ? 'Light' : 'Dark';
 
     this.maplibreMap = new maplibregl.Map({
       container: 'deckgl-basemap',
       style: {
         version: 8,
-        name: 'Dark',
+        name: styleName,
         sources: {
           'carto-dark': {
             type: 'raster',
-            tiles: [
-              'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-              'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-              'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-            ],
+            tiles: initialTiles,
             tileSize: 256,
             attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
           },
@@ -343,7 +365,7 @@ export class DeckGLMap {
             id: 'background',
             type: 'background',
             paint: {
-              'background-color': '#0a0f0c',
+              'background-color': initialBg,
             },
           },
           {
@@ -3495,6 +3517,28 @@ export class DeckGLMap {
       this.maplibreMap.setFilter('country-highlight-fill', noMatch);
       this.maplibreMap.setFilter('country-highlight-border', noMatch);
     } catch { /* layer not ready */ }
+  }
+
+  private switchBasemap(theme: 'dark' | 'light'): void {
+    if (!this.maplibreMap) return;
+    const source = this.maplibreMap.getSource('carto-dark') as maplibregl.RasterTileSource;
+    if (!source) return;
+    source.setTiles(theme === 'light' ? LIGHT_TILES : DARK_TILES);
+    try {
+      this.maplibreMap.setPaintProperty('background', 'background-color',
+        theme === 'light' ? LIGHT_BG : DARK_BG);
+    } catch { /* background layer may not exist */ }
+    this.updateCountryLayerPaint(theme);
+  }
+
+  private updateCountryLayerPaint(theme: 'dark' | 'light'): void {
+    if (!this.maplibreMap || !this.countryGeoJsonLoaded) return;
+    const hoverOpacity = theme === 'light' ? 0.10 : 0.06;
+    const highlightOpacity = theme === 'light' ? 0.18 : 0.12;
+    try {
+      this.maplibreMap.setPaintProperty('country-hover-fill', 'fill-opacity', hoverOpacity);
+      this.maplibreMap.setPaintProperty('country-highlight-fill', 'fill-opacity', highlightOpacity);
+    } catch { /* layers may not be ready */ }
   }
 
   public destroy(): void {

@@ -5,34 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** Users who prefer light mode get a first-class experience — every panel, the map, and all chrome look intentionally designed for light backgrounds, not like an afterthought inversion.
-**Current focus:** Phase 2 - Theme Core, Settings Toggle
+**Current focus:** Phase 2 - Theme Core, Settings Toggle (COMPLETE)
 
 ## Current Position
 
-Phase: 2 of 4 (Theme Core, Settings Toggle)
-Plan: 1 of 2 (COMPLETE)
-Status: In Progress
-Last activity: 2026-02-16 — 02-01 ThemeManager module and FOUC prevention complete
+Phase: 2 of 4 (Theme Core, Settings Toggle) - COMPLETE
+Plan: 2 of 2 (COMPLETE)
+Status: Phase Complete
+Last activity: 2026-02-16 — 02-02 Settings toggle UI and theme-changed event wiring complete
 
-Progress: [█████████░] 90%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 8 min
-- Total execution time: 0.77 hours
+- Total plans completed: 7
+- Average duration: 7 min
+- Total execution time: 0.80 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-css-foundation | 5/5 | 44min | 9min |
-| 02-theme-core-settings-toggle | 1/2 | 2min | 2min |
+| 02-theme-core-settings-toggle | 2/2 | 4min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (5min), 01-03 (5min), 01-04 (17min), 01-05 (12min), 02-01 (2min)
-- Trend: consistent (02-01 fast due to small focused scope)
+- Last 5 plans: 01-03 (5min), 01-04 (17min), 01-05 (12min), 02-01 (2min), 02-02 (2min)
+- Trend: consistent (Phase 2 plans fast due to focused scope)
 
 *Updated after each plan completion*
 
@@ -62,6 +62,8 @@ Recent decisions affecting current work:
 - (02-01) Dark mode is default — FOUC script only sets data-theme when stored value is explicitly 'light'
 - (02-01) applyStoredTheme() is lightweight pre-mount call: skips event dispatch and cache invalidation
 - (02-01) CSP updated with unsafe-inline for script-src to allow FOUC prevention inline scripts
+- (02-02) Scoped .section-label to .modal context to avoid leaking styles to existing popup .section-label
+- (02-02) Used :has(input:checked) CSS pseudo-class alongside JS .active class for redundant active state
 
 ### Pending Todos
 
@@ -84,7 +86,7 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-16 (plan execution)
-Stopped at: Completed 02-01-PLAN.md — ThemeManager module and FOUC prevention
+Stopped at: Completed 02-02-PLAN.md — Settings toggle UI and theme-changed event wiring (Phase 2 COMPLETE)
 Resume file: None
 
 ## Phase 1 Summary
@@ -109,3 +111,31 @@ Resume file: None
 - WCAG AA contrast verified in light mode
 
 **Next:** Phase 2 - ThemeManager State & Persistence
+
+## Phase 2 Summary
+
+**Status:** COMPLETE
+
+**Completed Plans:**
+1. 02-01: ThemeManager module and FOUC prevention (2min)
+2. 02-02: Settings toggle UI and theme-changed event wiring (2min)
+
+**Total Duration:** 4 minutes
+
+**Deliverables:**
+- ThemeManager module with get/set/apply theme functions and localStorage persistence
+- FOUC prevention inline scripts in both HTML entry points
+- Dark/Light radio toggle in settings modal APPEARANCE section
+- theme-changed event listener triggering D3 map re-render
+- CSS styles for theme toggle using existing theme variables
+- Settings modal title renamed from "Panel Settings" to "Settings"
+
+**Phase 2 Success Criteria Met:**
+1. User can toggle between dark and light mode via radio buttons in settings panel
+2. Theme preference persists in localStorage and restores on page refresh
+3. All 20+ panel types automatically re-style when theme changes (CSS variable cascade)
+4. Header, sidebar, modal dialogs, and all chrome elements switch themes correctly
+5. Dark mode remains the default for new users
+6. Page loads with correct theme applied before first paint (no FOUC)
+
+**Next:** Phase 3 - Map & Chart Theme Subscriptions
