@@ -1960,17 +1960,20 @@ export class App {
     this.newsPanels['energy'] = energyPanel;
     this.panels['energy'] = energyPanel;
 
-    // Dynamically create NewsPanel instances for any FEEDS category
-    // that doesn't already have a panel (e.g. finance variant categories)
+    // Dynamically create NewsPanel instances for any FEEDS category.
+    // If a category key collides with an existing data panel key (e.g. markets),
+    // create a separate `${key}-news` panel to avoid clobbering the data panel.
     for (const key of Object.keys(FEEDS)) {
       if (this.newsPanels[key]) continue;
       if (!Array.isArray((FEEDS as Record<string, unknown>)[key])) continue;
-      const panelConfig = DEFAULT_PANELS[key];
+      const panelKey = this.panels[key] && !this.newsPanels[key] ? `${key}-news` : key;
+      if (this.panels[panelKey]) continue;
+      const panelConfig = DEFAULT_PANELS[panelKey] ?? DEFAULT_PANELS[key];
       const label = panelConfig?.name ?? key.charAt(0).toUpperCase() + key.slice(1);
-      const panel = new NewsPanel(key, label);
+      const panel = new NewsPanel(panelKey, label);
       this.attachRelatedAssetHandlers(panel);
       this.newsPanels[key] = panel;
-      this.panels[key] = panel;
+      this.panels[panelKey] = panel;
     }
 
     // Geopolitical-only panels (not needed for tech variant)

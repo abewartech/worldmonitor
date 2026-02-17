@@ -63,6 +63,10 @@ import {
   SPACEPORTS,
   APT_GROUPS,
   CRITICAL_MINERALS,
+  STOCK_EXCHANGES,
+  FINANCIAL_CENTERS,
+  CENTRAL_BANKS,
+  COMMODITY_HUBS,
 } from '@/config';
 import { MapPopup, type PopupType } from './MapPopup';
 import {
@@ -163,6 +167,10 @@ const COLORS = {
   techHQ: [100, 200, 255, 200] as [number, number, number, number],
   accelerator: [255, 200, 0, 200] as [number, number, number, number],
   cloudRegion: [150, 100, 255, 180] as [number, number, number, number],
+  stockExchange: [80, 200, 255, 210] as [number, number, number, number],
+  financialCenter: [0, 220, 150, 200] as [number, number, number, number],
+  centralBank: [255, 210, 80, 210] as [number, number, number, number],
+  commodityHub: [255, 150, 80, 200] as [number, number, number, number],
   ucdpStateBased: [255, 50, 50, 200] as [number, number, number, number],
   ucdpNonState: [255, 165, 0, 200] as [number, number, number, number],
   ucdpOneSided: [255, 255, 0, 200] as [number, number, number, number],
@@ -953,6 +961,20 @@ export class DeckGLMap {
       layers.push(this.createEconomicCentersLayer());
     }
 
+    // Finance variant layers
+    if (mapLayers.stockExchanges) {
+      layers.push(this.createStockExchangesLayer());
+    }
+    if (mapLayers.financialCenters) {
+      layers.push(this.createFinancialCentersLayer());
+    }
+    if (mapLayers.centralBanks) {
+      layers.push(this.createCentralBanksLayer());
+    }
+    if (mapLayers.commodityHubs) {
+      layers.push(this.createCommodityHubsLayer());
+    }
+
     // Critical minerals layer
     if (mapLayers.minerals) {
       layers.push(this.createMineralsLayer());
@@ -1571,6 +1593,74 @@ export class DeckGLMap {
     });
   }
 
+  private createStockExchangesLayer(): ScatterplotLayer {
+    return new ScatterplotLayer({
+      id: 'stock-exchanges-layer',
+      data: STOCK_EXCHANGES,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: (d) => d.tier === 'mega' ? 18000 : d.tier === 'major' ? 14000 : 11000,
+      getFillColor: (d) => {
+        if (d.tier === 'mega') return [255, 215, 80, 220] as [number, number, number, number];
+        if (d.tier === 'major') return COLORS.stockExchange;
+        return [140, 210, 255, 190] as [number, number, number, number];
+      },
+      radiusMinPixels: 5,
+      radiusMaxPixels: 14,
+      pickable: true,
+    });
+  }
+
+  private createFinancialCentersLayer(): ScatterplotLayer {
+    return new ScatterplotLayer({
+      id: 'financial-centers-layer',
+      data: FINANCIAL_CENTERS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: (d) => d.type === 'global' ? 17000 : d.type === 'regional' ? 13000 : 10000,
+      getFillColor: (d) => {
+        if (d.type === 'global') return COLORS.financialCenter;
+        if (d.type === 'regional') return [0, 190, 130, 185] as [number, number, number, number];
+        return [0, 150, 110, 165] as [number, number, number, number];
+      },
+      radiusMinPixels: 4,
+      radiusMaxPixels: 12,
+      pickable: true,
+    });
+  }
+
+  private createCentralBanksLayer(): ScatterplotLayer {
+    return new ScatterplotLayer({
+      id: 'central-banks-layer',
+      data: CENTRAL_BANKS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: (d) => d.type === 'major' ? 15000 : d.type === 'supranational' ? 17000 : 12000,
+      getFillColor: (d) => {
+        if (d.type === 'major') return COLORS.centralBank;
+        if (d.type === 'supranational') return [255, 235, 140, 220] as [number, number, number, number];
+        return [235, 180, 80, 185] as [number, number, number, number];
+      },
+      radiusMinPixels: 4,
+      radiusMaxPixels: 12,
+      pickable: true,
+    });
+  }
+
+  private createCommodityHubsLayer(): ScatterplotLayer {
+    return new ScatterplotLayer({
+      id: 'commodity-hubs-layer',
+      data: COMMODITY_HUBS,
+      getPosition: (d) => [d.lon, d.lat],
+      getRadius: (d) => d.type === 'exchange' ? 14000 : d.type === 'port' ? 12000 : 10000,
+      getFillColor: (d) => {
+        if (d.type === 'exchange') return COLORS.commodityHub;
+        if (d.type === 'port') return [80, 170, 255, 190] as [number, number, number, number];
+        return [255, 110, 80, 185] as [number, number, number, number];
+      },
+      radiusMinPixels: 4,
+      radiusMaxPixels: 11,
+      pickable: true,
+    });
+  }
+
   private createAPTGroupsLayer(): ScatterplotLayer {
     // APT Groups - cyber threat actor markers (geopolitical variant only)
     // Made subtle to avoid visual clutter - small orange dots
@@ -2132,6 +2222,14 @@ export class DeckGLMap {
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>Strategic Waterway</div>` };
       case 'economic-centers-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.country)}</div>` };
+      case 'stock-exchanges-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.shortName)}</strong><br/>${text(obj.city)}, ${text(obj.country)}</div>` };
+      case 'financial-centers-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type)} financial center</div>` };
+      case 'central-banks-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.shortName)}</strong><br/>${text(obj.city)}, ${text(obj.country)}</div>` };
+      case 'commodity-hubs-layer':
+        return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${text(obj.type)} · ${text(obj.city)}</div>` };
       case 'startup-hubs-layer':
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.city)}</strong><br/>${text(obj.country)}</div>` };
       case 'tech-hqs-layer':
@@ -2328,6 +2426,10 @@ export class DeckGLMap {
       'natural-events-layer': 'natEvent',
       'waterways-layer': 'waterway',
       'economic-centers-layer': 'economic',
+      'stock-exchanges-layer': 'stockExchange',
+      'financial-centers-layer': 'financialCenter',
+      'central-banks-layer': 'centralBank',
+      'commodity-hubs-layer': 'commodityHub',
       'spaceports-layer': 'spaceport',
       'ports-layer': 'port',
       'flight-delays-layer': 'flight',
@@ -2466,6 +2568,21 @@ export class DeckGLMap {
           { key: 'natural', label: 'Natural Events', icon: '&#127755;' },
           { key: 'fires', label: 'Fires', icon: '&#128293;' },
         ]
+      : SITE_VARIANT === 'finance'
+      ? [
+          { key: 'stockExchanges', label: 'Stock Exchanges', icon: '&#127963;' },
+          { key: 'financialCenters', label: 'Financial Centers', icon: '&#128176;' },
+          { key: 'centralBanks', label: 'Central Banks', icon: '&#127974;' },
+          { key: 'commodityHubs', label: 'Commodity Hubs', icon: '&#128230;' },
+          { key: 'cables', label: 'Undersea Cables', icon: '&#128268;' },
+          { key: 'pipelines', label: 'Pipelines', icon: '&#128738;' },
+          { key: 'outages', label: 'Internet Outages', icon: '&#128225;' },
+          { key: 'weather', label: 'Weather Alerts', icon: '&#9928;' },
+          { key: 'economic', label: 'Economic Centers', icon: '&#128176;' },
+          { key: 'waterways', label: 'Strategic Waterways', icon: '&#9875;' },
+          { key: 'natural', label: 'Natural Events', icon: '&#127755;' },
+          { key: 'cyberThreats', label: 'Cyber Threats', icon: '&#128737;' },
+        ]
       : [
           { key: 'hotspots', label: 'Intel Hotspots', icon: '&#127919;' },
           { key: 'conflicts', label: 'Conflict Zones', icon: '&#9876;' },
@@ -2587,6 +2704,36 @@ export class DeckGLMap {
       </div>
     `;
 
+    const financeHelpContent = `
+      <div class="layer-help-header">
+        <span>Map Layers Guide</span>
+        <button class="layer-help-close">×</button>
+      </div>
+      <div class="layer-help-content">
+        <div class="layer-help-section">
+          <div class="layer-help-title">Finance Core</div>
+          <div class="layer-help-item"><span>STOCKEXCHANGES</span> Major global exchanges by market tier</div>
+          <div class="layer-help-item"><span>FINANCIALCENTERS</span> Global and regional finance hubs</div>
+          <div class="layer-help-item"><span>CENTRALBANKS</span> Monetary policy institutions worldwide</div>
+          <div class="layer-help-item"><span>COMMODITYHUBS</span> Key exchanges, ports, and refining hubs</div>
+        </div>
+        <div class="layer-help-section">
+          <div class="layer-help-title">Infrastructure & Risk</div>
+          <div class="layer-help-item"><span>CABLES</span> Major undersea fiber routes tied to market infrastructure</div>
+          <div class="layer-help-item"><span>PIPELINES</span> Oil/gas pipeline routes affecting energy markets</div>
+          <div class="layer-help-item"><span>OUTAGES</span> Internet disruptions that can impact market operations</div>
+          <div class="layer-help-item"><span>CYBERTHREATS</span> Security events around financial infrastructure</div>
+        </div>
+        <div class="layer-help-section">
+          <div class="layer-help-title">Macro Context</div>
+          <div class="layer-help-item"><span>ECONOMIC</span> Major economic and financial centers</div>
+          <div class="layer-help-item"><span>WATERWAYS</span> Strategic chokepoints for commodity shipping</div>
+          <div class="layer-help-item"><span>WEATHER</span> Severe weather events with market relevance</div>
+          <div class="layer-help-item"><span>NATURAL</span> Earthquakes, fires, floods, and other natural disruptions</div>
+        </div>
+      </div>
+    `;
+
     const fullHelpContent = `
       <div class="layer-help-header">
         <span>Map Layers Guide</span>
@@ -2639,7 +2786,11 @@ export class DeckGLMap {
       </div>
     `;
 
-    popup.innerHTML = SITE_VARIANT === 'tech' ? techHelpContent : fullHelpContent;
+    popup.innerHTML = SITE_VARIANT === 'tech'
+      ? techHelpContent
+      : SITE_VARIANT === 'finance'
+      ? financeHelpContent
+      : fullHelpContent;
 
     popup.querySelector('.layer-help-close')?.addEventListener('click', () => popup.remove());
 
@@ -2683,6 +2834,14 @@ export class DeckGLMap {
           { shape: shapes.circle('rgb(255, 200, 0)'), label: 'Accelerator' },
           { shape: shapes.circle('rgb(150, 100, 255)'), label: 'Cloud Region' },
           { shape: shapes.square('rgb(136, 68, 255)'), label: 'Datacenter' },
+        ]
+      : SITE_VARIANT === 'finance'
+      ? [
+          { shape: shapes.circle('rgb(255, 215, 80)'), label: 'Stock Exchange' },
+          { shape: shapes.circle('rgb(0, 220, 150)'), label: 'Financial Center' },
+          { shape: shapes.hexagon('rgb(255, 210, 80)'), label: 'Central Bank' },
+          { shape: shapes.square('rgb(255, 150, 80)'), label: 'Commodity Hub' },
+          { shape: shapes.triangle('rgb(80, 170, 255)'), label: 'Waterway' },
         ]
       : [
           { shape: shapes.circle('rgb(255, 68, 68)'), label: 'High Alert' },

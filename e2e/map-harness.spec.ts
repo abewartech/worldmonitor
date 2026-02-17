@@ -11,13 +11,13 @@ type OverlaySnapshot = {
 
 type VisualScenarioSummary = {
   id: string;
-  variant: 'both' | 'full' | 'tech';
+  variant: 'both' | 'full' | 'tech' | 'finance';
 };
 
 type HarnessWindow = Window & {
   __mapHarness?: {
     ready: boolean;
-    variant: 'full' | 'tech';
+    variant: 'full' | 'tech' | 'finance';
     seedAllDynamicData: () => void;
     setProtestsScenario: (scenario: 'alpha' | 'beta') => void;
     setPulseProtestsScenario: (
@@ -114,6 +114,14 @@ const EXPECTED_TECH_DECK_LAYERS = [
   'news-locations-layer',
 ];
 
+const EXPECTED_FINANCE_DECK_LAYERS = [
+  ...EXPECTED_FULL_DECK_LAYERS,
+  'stock-exchanges-layer',
+  'financial-centers-layer',
+  'central-banks-layer',
+  'commodity-hubs-layer',
+];
+
 const waitForHarnessReady = async (
   page: import('@playwright/test').Page
 ): Promise<void> => {
@@ -171,7 +179,11 @@ test.describe('DeckGL map harness', () => {
       return w.__mapHarness?.variant ?? 'full';
     });
 
-    const expectedVariant = process.env.VITE_VARIANT === 'tech' ? 'tech' : 'full';
+    const expectedVariant = process.env.VITE_VARIANT === 'tech'
+      ? 'tech'
+      : process.env.VITE_VARIANT === 'finance'
+      ? 'finance'
+      : 'full';
     expect(runtimeVariant).toBe(expectedVariant);
   });
 
@@ -222,10 +234,11 @@ test.describe('DeckGL map harness', () => {
       return w.__mapHarness?.variant ?? 'full';
     });
 
-    const expectedDeckLayers =
-      variant === 'tech'
-        ? EXPECTED_TECH_DECK_LAYERS
-        : EXPECTED_FULL_DECK_LAYERS;
+    const expectedDeckLayers = variant === 'tech'
+      ? EXPECTED_TECH_DECK_LAYERS
+      : variant === 'finance'
+      ? EXPECTED_FINANCE_DECK_LAYERS
+      : EXPECTED_FULL_DECK_LAYERS;
 
     await expect
       .poll(async () => {
