@@ -120,12 +120,13 @@ interface TechEventMarker {
 }
 
 // View presets with longitude, latitude, zoom
+// CUSTOMIZED: Indonesia-focused default view
 const VIEW_PRESETS: Record<DeckMapView, { longitude: number; latitude: number; zoom: number }> = {
-  global: { longitude: 0, latitude: 20, zoom: 1.5 },
+  global: { longitude: 118, latitude: -2, zoom: 4.5 },
   america: { longitude: -95, latitude: 38, zoom: 3 },
   mena: { longitude: 45, latitude: 28, zoom: 3.5 },
   eu: { longitude: 15, latitude: 50, zoom: 3.5 },
-  asia: { longitude: 105, latitude: 35, zoom: 3 },
+  asia: { longitude: 118, latitude: -2, zoom: 4.5 },
   latam: { longitude: -60, latitude: -15, zoom: 3 },
   africa: { longitude: 20, latitude: 5, zoom: 3 },
   oceania: { longitude: 135, latitude: -25, zoom: 3.5 },
@@ -2336,10 +2337,10 @@ export class DeckGLMap {
         const pipelineTypeLabel = pipelineType === 'oil'
           ? t('popups.pipeline.types.oil')
           : pipelineType === 'gas'
-          ? t('popups.pipeline.types.gas')
-          : pipelineType === 'products'
-          ? t('popups.pipeline.types.products')
-          : `${text(obj.type)} ${t('components.deckgl.tooltip.pipeline')}`;
+            ? t('popups.pipeline.types.gas')
+            : pipelineType === 'products'
+              ? t('popups.pipeline.types.products')
+              : `${text(obj.type)} ${t('components.deckgl.tooltip.pipeline')}`;
         return { html: `<div class="deckgl-tooltip"><strong>${text(obj.name)}</strong><br/>${pipelineTypeLabel}</div>` };
       }
       case 'conflict-zones-layer': {
@@ -2725,7 +2726,7 @@ export class DeckGLMap {
         { key: 'fires', label: t('components.deckgl.layers.fires'), icon: '&#128293;' },
       ]
       : SITE_VARIANT === 'finance'
-      ? [
+        ? [
           { key: 'stockExchanges', label: t('components.deckgl.layers.stockExchanges'), icon: '&#127963;' },
           { key: 'financialCenters', label: t('components.deckgl.layers.financialCenters'), icon: '&#128176;' },
           { key: 'centralBanks', label: t('components.deckgl.layers.centralBanks'), icon: '&#127974;' },
@@ -2740,32 +2741,32 @@ export class DeckGLMap {
           { key: 'natural', label: t('components.deckgl.layers.naturalEvents'), icon: '&#127755;' },
           { key: 'cyberThreats', label: t('components.deckgl.layers.cyberThreats'), icon: '&#128737;' },
         ]
-      : [
-        { key: 'hotspots', label: t('components.deckgl.layers.intelHotspots'), icon: '&#127919;' },
-        { key: 'conflicts', label: t('components.deckgl.layers.conflictZones'), icon: '&#9876;' },
-        { key: 'bases', label: t('components.deckgl.layers.militaryBases'), icon: '&#127963;' },
-        { key: 'nuclear', label: t('components.deckgl.layers.nuclearSites'), icon: '&#9762;' },
-        { key: 'irradiators', label: t('components.deckgl.layers.gammaIrradiators'), icon: '&#9888;' },
-        { key: 'spaceports', label: t('components.deckgl.layers.spaceports'), icon: '&#128640;' },
-        { key: 'cables', label: t('components.deckgl.layers.underseaCables'), icon: '&#128268;' },
-        { key: 'pipelines', label: t('components.deckgl.layers.pipelines'), icon: '&#128738;' },
-        { key: 'datacenters', label: t('components.deckgl.layers.aiDataCenters'), icon: '&#128421;' },
-        { key: 'military', label: t('components.deckgl.layers.militaryActivity'), icon: '&#9992;' },
-        { key: 'ais', label: t('components.deckgl.layers.shipTraffic'), icon: '&#128674;' },
-        { key: 'flights', label: t('components.deckgl.layers.flightDelays'), icon: '&#9992;' },
-        { key: 'protests', label: t('components.deckgl.layers.protests'), icon: '&#128226;' },
-        { key: 'ucdpEvents', label: t('components.deckgl.layers.ucdpEvents'), icon: '&#9876;' },
-        { key: 'displacement', label: t('components.deckgl.layers.displacementFlows'), icon: '&#128101;' },
-        { key: 'climate', label: t('components.deckgl.layers.climateAnomalies'), icon: '&#127787;' },
-        { key: 'weather', label: t('components.deckgl.layers.weatherAlerts'), icon: '&#9928;' },
-        { key: 'outages', label: t('components.deckgl.layers.internetOutages'), icon: '&#128225;' },
-        { key: 'cyberThreats', label: t('components.deckgl.layers.cyberThreats'), icon: '&#128737;' },
-        { key: 'natural', label: t('components.deckgl.layers.naturalEvents'), icon: '&#127755;' },
-        { key: 'fires', label: t('components.deckgl.layers.fires'), icon: '&#128293;' },
-        { key: 'waterways', label: t('components.deckgl.layers.strategicWaterways'), icon: '&#9875;' },
-        { key: 'economic', label: t('components.deckgl.layers.economicCenters'), icon: '&#128176;' },
-        { key: 'minerals', label: t('components.deckgl.layers.criticalMinerals'), icon: '&#128142;' },
-      ];
+        : [
+          { key: 'hotspots', label: t('components.deckgl.layers.intelHotspots'), icon: '&#127919;' },
+          { key: 'conflicts', label: t('components.deckgl.layers.conflictZones'), icon: '&#9876;' },
+          { key: 'bases', label: t('components.deckgl.layers.militaryBases'), icon: '&#127963;' },
+          { key: 'nuclear', label: t('components.deckgl.layers.nuclearSites'), icon: '&#9762;' },
+          { key: 'irradiators', label: t('components.deckgl.layers.gammaIrradiators'), icon: '&#9888;' },
+          { key: 'spaceports', label: t('components.deckgl.layers.spaceports'), icon: '&#128640;' },
+          { key: 'cables', label: t('components.deckgl.layers.underseaCables'), icon: '&#128268;' },
+          { key: 'pipelines', label: t('components.deckgl.layers.pipelines'), icon: '&#128738;' },
+          { key: 'datacenters', label: t('components.deckgl.layers.aiDataCenters'), icon: '&#128421;' },
+          { key: 'military', label: t('components.deckgl.layers.militaryActivity'), icon: '&#9992;' },
+          { key: 'ais', label: t('components.deckgl.layers.shipTraffic'), icon: '&#128674;' },
+          { key: 'flights', label: t('components.deckgl.layers.flightDelays'), icon: '&#9992;' },
+          { key: 'protests', label: t('components.deckgl.layers.protests'), icon: '&#128226;' },
+          { key: 'ucdpEvents', label: t('components.deckgl.layers.ucdpEvents'), icon: '&#9876;' },
+          { key: 'displacement', label: t('components.deckgl.layers.displacementFlows'), icon: '&#128101;' },
+          { key: 'climate', label: t('components.deckgl.layers.climateAnomalies'), icon: '&#127787;' },
+          { key: 'weather', label: t('components.deckgl.layers.weatherAlerts'), icon: '&#9928;' },
+          { key: 'outages', label: t('components.deckgl.layers.internetOutages'), icon: '&#128225;' },
+          { key: 'cyberThreats', label: t('components.deckgl.layers.cyberThreats'), icon: '&#128737;' },
+          { key: 'natural', label: t('components.deckgl.layers.naturalEvents'), icon: '&#127755;' },
+          { key: 'fires', label: t('components.deckgl.layers.fires'), icon: '&#128293;' },
+          { key: 'waterways', label: t('components.deckgl.layers.strategicWaterways'), icon: '&#9875;' },
+          { key: 'economic', label: t('components.deckgl.layers.economicCenters'), icon: '&#128176;' },
+          { key: 'minerals', label: t('components.deckgl.layers.criticalMinerals'), icon: '&#128142;' },
+        ];
 
     toggles.innerHTML = `
       <div class="toggle-header">
@@ -2854,22 +2855,22 @@ export class DeckGLMap {
       ${helpHeader}
       <div class="layer-help-content">
         ${helpSection('techEcosystem', [
-          helpItem(label('startupHubs'), 'techStartupHubs'),
-          helpItem(label('cloudRegions'), 'techCloudRegions'),
-          helpItem(label('techHQs'), 'techHQs'),
-          helpItem(label('accelerators'), 'techAccelerators'),
-        ])}
+      helpItem(label('startupHubs'), 'techStartupHubs'),
+      helpItem(label('cloudRegions'), 'techCloudRegions'),
+      helpItem(label('techHQs'), 'techHQs'),
+      helpItem(label('accelerators'), 'techAccelerators'),
+    ])}
         ${helpSection('infrastructure', [
-          helpItem(label('underseaCables'), 'infraCables'),
-          helpItem(label('aiDataCenters'), 'infraDatacenters'),
-          helpItem(label('internetOutages'), 'infraOutages'),
-        ])}
+      helpItem(label('underseaCables'), 'infraCables'),
+      helpItem(label('aiDataCenters'), 'infraDatacenters'),
+      helpItem(label('internetOutages'), 'infraOutages'),
+    ])}
         ${helpSection('naturalEconomic', [
-          helpItem(label('naturalEvents'), 'naturalEventsTech'),
-          helpItem(label('weatherAlerts'), 'weatherAlerts'),
-          helpItem(label('economicCenters'), 'economicCenters'),
-          helpItem(staticLabel('countries'), 'countriesOverlay'),
-        ])}
+      helpItem(label('naturalEvents'), 'naturalEventsTech'),
+      helpItem(label('weatherAlerts'), 'weatherAlerts'),
+      helpItem(label('economicCenters'), 'economicCenters'),
+      helpItem(staticLabel('countries'), 'countriesOverlay'),
+    ])}
       </div>
     `;
 
@@ -2877,23 +2878,23 @@ export class DeckGLMap {
       ${helpHeader}
       <div class="layer-help-content">
         ${helpSection('financeCore', [
-          helpItem(label('stockExchanges'), 'financeExchanges'),
-          helpItem(label('financialCenters'), 'financeCenters'),
-          helpItem(label('centralBanks'), 'financeCentralBanks'),
-          helpItem(label('commodityHubs'), 'financeCommodityHubs'),
-        ])}
+      helpItem(label('stockExchanges'), 'financeExchanges'),
+      helpItem(label('financialCenters'), 'financeCenters'),
+      helpItem(label('centralBanks'), 'financeCentralBanks'),
+      helpItem(label('commodityHubs'), 'financeCommodityHubs'),
+    ])}
         ${helpSection('infrastructureRisk', [
-          helpItem(label('underseaCables'), 'financeCables'),
-          helpItem(label('pipelines'), 'financePipelines'),
-          helpItem(label('internetOutages'), 'financeOutages'),
-          helpItem(label('cyberThreats'), 'financeCyberThreats'),
-        ])}
+      helpItem(label('underseaCables'), 'financeCables'),
+      helpItem(label('pipelines'), 'financePipelines'),
+      helpItem(label('internetOutages'), 'financeOutages'),
+      helpItem(label('cyberThreats'), 'financeCyberThreats'),
+    ])}
         ${helpSection('macroContext', [
-          helpItem(label('economicCenters'), 'economicCenters'),
-          helpItem(label('strategicWaterways'), 'macroWaterways'),
-          helpItem(label('weatherAlerts'), 'weatherAlertsMarket'),
-          helpItem(label('naturalEvents'), 'naturalEventsMacro'),
-        ])}
+      helpItem(label('economicCenters'), 'economicCenters'),
+      helpItem(label('strategicWaterways'), 'macroWaterways'),
+      helpItem(label('weatherAlerts'), 'weatherAlertsMarket'),
+      helpItem(label('naturalEvents'), 'naturalEventsMacro'),
+    ])}
       </div>
     `;
 
@@ -2901,48 +2902,48 @@ export class DeckGLMap {
       ${helpHeader}
       <div class="layer-help-content">
         ${helpSection('timeFilter', [
-          helpItem(staticLabel('timeRecent'), 'timeRecent'),
-          helpItem(staticLabel('timeExtended'), 'timeExtended'),
-        ], 'timeAffects')}
+      helpItem(staticLabel('timeRecent'), 'timeRecent'),
+      helpItem(staticLabel('timeExtended'), 'timeExtended'),
+    ], 'timeAffects')}
         ${helpSection('geopolitical', [
-          helpItem(label('conflictZones'), 'geoConflicts'),
-          helpItem(label('intelHotspots'), 'geoHotspots'),
-          helpItem(staticLabel('sanctions'), 'geoSanctions'),
-          helpItem(label('protests'), 'geoProtests'),
-        ])}
+      helpItem(label('conflictZones'), 'geoConflicts'),
+      helpItem(label('intelHotspots'), 'geoHotspots'),
+      helpItem(staticLabel('sanctions'), 'geoSanctions'),
+      helpItem(label('protests'), 'geoProtests'),
+    ])}
         ${helpSection('militaryStrategic', [
-          helpItem(label('militaryBases'), 'militaryBases'),
-          helpItem(label('nuclearSites'), 'militaryNuclear'),
-          helpItem(label('gammaIrradiators'), 'militaryIrradiators'),
-          helpItem(label('militaryActivity'), 'militaryActivity'),
-        ])}
+      helpItem(label('militaryBases'), 'militaryBases'),
+      helpItem(label('nuclearSites'), 'militaryNuclear'),
+      helpItem(label('gammaIrradiators'), 'militaryIrradiators'),
+      helpItem(label('militaryActivity'), 'militaryActivity'),
+    ])}
         ${helpSection('infrastructure', [
-          helpItem(label('underseaCables'), 'infraCablesFull'),
-          helpItem(label('pipelines'), 'infraPipelinesFull'),
-          helpItem(label('internetOutages'), 'infraOutages'),
-          helpItem(label('aiDataCenters'), 'infraDatacentersFull'),
-        ])}
+      helpItem(label('underseaCables'), 'infraCablesFull'),
+      helpItem(label('pipelines'), 'infraPipelinesFull'),
+      helpItem(label('internetOutages'), 'infraOutages'),
+      helpItem(label('aiDataCenters'), 'infraDatacentersFull'),
+    ])}
         ${helpSection('transport', [
-          helpItem(staticLabel('shipping'), 'transportShipping'),
-          helpItem(label('flightDelays'), 'transportDelays'),
-        ])}
+      helpItem(staticLabel('shipping'), 'transportShipping'),
+      helpItem(label('flightDelays'), 'transportDelays'),
+    ])}
         ${helpSection('naturalEconomic', [
-          helpItem(label('naturalEvents'), 'naturalEventsFull'),
-          helpItem(label('weatherAlerts'), 'weatherAlerts'),
-          helpItem(label('economicCenters'), 'economicCenters'),
-        ])}
+      helpItem(label('naturalEvents'), 'naturalEventsFull'),
+      helpItem(label('weatherAlerts'), 'weatherAlerts'),
+      helpItem(label('economicCenters'), 'economicCenters'),
+    ])}
         ${helpSection('labels', [
-          helpItem(staticLabel('countries'), 'countriesOverlay'),
-          helpItem(label('strategicWaterways'), 'waterwaysLabels'),
-        ])}
+      helpItem(staticLabel('countries'), 'countriesOverlay'),
+      helpItem(label('strategicWaterways'), 'waterwaysLabels'),
+    ])}
       </div>
     `;
 
     popup.innerHTML = SITE_VARIANT === 'tech'
       ? techHelpContent
       : SITE_VARIANT === 'finance'
-      ? financeHelpContent
-      : fullHelpContent;
+        ? financeHelpContent
+        : fullHelpContent;
 
     popup.querySelector('.layer-help-close')?.addEventListener('click', () => popup.remove());
 
@@ -2982,21 +2983,21 @@ export class DeckGLMap {
     const isLight = getCurrentTheme() === 'light';
     const legendItems = SITE_VARIANT === 'tech'
       ? [
-          { shape: shapes.circle(isLight ? 'rgb(22, 163, 74)' : 'rgb(0, 255, 150)'), label: t('components.deckgl.legend.startupHub') },
-          { shape: shapes.circle('rgb(100, 200, 255)'), label: t('components.deckgl.legend.techHQ') },
-          { shape: shapes.circle(isLight ? 'rgb(180, 120, 0)' : 'rgb(255, 200, 0)'), label: t('components.deckgl.legend.accelerator') },
-          { shape: shapes.circle('rgb(150, 100, 255)'), label: t('components.deckgl.legend.cloudRegion') },
-          { shape: shapes.square('rgb(136, 68, 255)'), label: t('components.deckgl.legend.datacenter') },
-        ]
+        { shape: shapes.circle(isLight ? 'rgb(22, 163, 74)' : 'rgb(0, 255, 150)'), label: t('components.deckgl.legend.startupHub') },
+        { shape: shapes.circle('rgb(100, 200, 255)'), label: t('components.deckgl.legend.techHQ') },
+        { shape: shapes.circle(isLight ? 'rgb(180, 120, 0)' : 'rgb(255, 200, 0)'), label: t('components.deckgl.legend.accelerator') },
+        { shape: shapes.circle('rgb(150, 100, 255)'), label: t('components.deckgl.legend.cloudRegion') },
+        { shape: shapes.square('rgb(136, 68, 255)'), label: t('components.deckgl.legend.datacenter') },
+      ]
       : SITE_VARIANT === 'finance'
-      ? [
+        ? [
           { shape: shapes.circle('rgb(255, 215, 80)'), label: t('components.deckgl.legend.stockExchange') },
           { shape: shapes.circle('rgb(0, 220, 150)'), label: t('components.deckgl.legend.financialCenter') },
           { shape: shapes.hexagon('rgb(255, 210, 80)'), label: t('components.deckgl.legend.centralBank') },
           { shape: shapes.square('rgb(255, 150, 80)'), label: t('components.deckgl.legend.commodityHub') },
           { shape: shapes.triangle('rgb(80, 170, 255)'), label: t('components.deckgl.legend.waterway') },
         ]
-      : [
+        : [
           { shape: shapes.circle('rgb(255, 68, 68)'), label: t('components.deckgl.legend.highAlert') },
           { shape: shapes.circle('rgb(255, 165, 0)'), label: t('components.deckgl.legend.elevated') },
           { shape: shapes.circle(isLight ? 'rgb(180, 120, 0)' : 'rgb(255, 255, 0)'), label: t('components.deckgl.legend.monitoring') },

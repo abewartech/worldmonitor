@@ -94,83 +94,20 @@ export function getLearningProgress(): { inLearning: boolean; remainingMinutes: 
 }
 
 const COUNTRY_KEYWORDS: Record<string, string[]> = {
-  US: ['united states', 'usa', 'america', 'washington', 'biden', 'trump', 'pentagon'],
-  RU: ['russia', 'moscow', 'kremlin', 'putin'],
-  CN: ['china', 'beijing', 'xi jinping', 'prc'],
-  UA: ['ukraine', 'kyiv', 'zelensky', 'donbas'],
-  IR: ['iran', 'tehran', 'khamenei', 'irgc'],
-  IL: ['israel', 'tel aviv', 'netanyahu', 'idf', 'gaza'],
-  TW: ['taiwan', 'taipei'],
-  KP: ['north korea', 'pyongyang', 'kim jong'],
-  SA: ['saudi arabia', 'riyadh', 'mbs'],
-  TR: ['turkey', 'ankara', 'erdogan'],
-  PL: ['poland', 'warsaw'],
-  DE: ['germany', 'berlin'],
-  FR: ['france', 'paris', 'macron'],
-  GB: ['britain', 'uk', 'london', 'starmer'],
-  IN: ['india', 'delhi', 'modi'],
-  PK: ['pakistan', 'islamabad'],
-  SY: ['syria', 'damascus', 'assad'],
-  YE: ['yemen', 'sanaa', 'houthi'],
-  MM: ['myanmar', 'burma', 'rangoon'],
-  VE: ['venezuela', 'caracas', 'maduro'],
-  BR: ['brazil', 'brasilia', 'lula', 'bolsonaro'],
-  AE: ['uae', 'emirates', 'dubai', 'abu dhabi'],
+  ID: ['indonesia', 'jakarta', 'jokowi', 'prabowo', 'tni', 'indonesian', 'java', 'sumatra', 'kalimantan', 'sulawesi', 'papua', 'bali', 'nkri', 'dpr ri', 'kemhan'],
 };
 
 // Geopolitical baseline risk scores (0-50)
 // Reflects inherent instability regardless of current events
 const BASELINE_RISK: Record<string, number> = {
-  US: 5,    // Stable democracy, high media coverage inflates event counts
-  RU: 35,   // Authoritarian, active in Ukraine conflict
-  CN: 25,   // Authoritarian, Taiwan tensions, internal repression
-  UA: 50,   // Active war zone
-  IR: 40,   // Authoritarian, regional tensions, under-reported
-  IL: 45,   // Active conflict with Gaza/Lebanon
-  TW: 30,   // China tensions, invasion risk
-  KP: 45,   // Rogue state, nuclear threat, near-zero reporting
-  SA: 20,   // Regional tensions but relatively stable
-  TR: 25,   // Regional involvement, internal tensions
-  PL: 10,   // NATO frontline but stable
-  DE: 5,    // Stable democracy
-  FR: 10,   // Social tensions but stable
-  GB: 5,    // Stable democracy
-  IN: 20,   // Regional tensions, internal issues
-  PK: 35,   // Nuclear state, instability, terrorism
-  SY: 50,   // Active civil war
-  YE: 50,   // Active civil war
-  MM: 45,   // Military coup, civil conflict
-  VE: 40,   // Economic collapse, authoritarian
-  BR: 15,   // Large democracy, social tensions, Amazon deforestation
-  AE: 10,   // Stable, regional hub, low internal unrest
+  ID: 20,   // Large democracy, regional tensions, internal issues, natural disasters
 };
 
 // Event significance multipliers
 // Higher = each event is more significant (authoritarian states where events are suppressed)
 // Lower = events are common/expected (open democracies with high media coverage)
 const EVENT_MULTIPLIER: Record<string, number> = {
-  US: 0.3,  // Many protests normal, over-reported
-  RU: 2.0,  // Protests rare and significant
-  CN: 2.5,  // Any protest is major (heavily suppressed)
-  UA: 0.8,  // War context, events expected
-  IR: 2.0,  // Protests suppressed, significant when occur
-  IL: 0.7,  // Frequent conflict, well-documented
-  TW: 1.5,  // Events significant
-  KP: 3.0,  // Almost no reporting, any event = major
-  SA: 2.0,  // Suppressed
-  TR: 1.2,  // Some suppression
-  PL: 0.8,  // Open democracy
-  DE: 0.5,  // Protests normal
-  FR: 0.6,  // Protests common
-  GB: 0.5,  // Open democracy
-  IN: 0.8,  // Large democracy, many events
-  PK: 1.5,  // Some suppression
-  SY: 0.7,  // War zone, events expected
-  YE: 0.7,  // War zone, events expected
-  MM: 1.8,  // Military suppression
-  VE: 1.8,  // Suppressed
-  BR: 0.6,  // Large democracy, many events
-  AE: 1.5,  // Events rare, significant when occur
+  ID: 1.2,  // Large democracy, protests somewhat common but significant
 };
 
 const countryDataMap = new Map<string, CountryData>();
@@ -244,6 +181,7 @@ export function ingestHapiForCII(summaries: Map<string, HapiConflictSummary>): v
 }
 
 const ISO3_TO_ISO2: Record<string, string> = {
+  IDN: 'ID',
   AFG: 'AF', SYR: 'SY', UKR: 'UA', SDN: 'SD', SSD: 'SS', SOM: 'SO',
   COD: 'CD', MMR: 'MM', YEM: 'YE', ETH: 'ET', VEN: 'VE', IRQ: 'IQ',
   COL: 'CO', NGA: 'NG', PSE: 'PS', TUR: 'TR', PAK: 'PK', IRN: 'IR',
@@ -252,6 +190,7 @@ const ISO3_TO_ISO2: Record<string, string> = {
 };
 
 const COUNTRY_NAME_TO_ISO: Record<string, string> = {
+  'Indonesia': 'ID',
   'Afghanistan': 'AF', 'Syria': 'SY', 'Ukraine': 'UA', 'Sudan': 'SD',
   'South Sudan': 'SS', 'Somalia': 'SO', 'DR Congo': 'CD', 'Myanmar': 'MM',
   'Yemen': 'YE', 'Ethiopia': 'ET', 'Venezuela': 'VE', 'Iraq': 'IQ',
@@ -300,19 +239,7 @@ export function ingestClimateForCII(anomalies: ClimateAnomaly[]): void {
 
 // Country bounding boxes for location-based attribution [minLat, maxLat, minLon, maxLon]
 const COUNTRY_BOUNDS: Record<string, [number, number, number, number]> = {
-  IR: [25, 40, 44, 63],      // Iran
-  IL: [29, 34, 34, 36],      // Israel
-  UA: [44, 53, 22, 40],      // Ukraine
-  TW: [21, 26, 119, 122],    // Taiwan
-  KP: [37, 43, 124, 131],    // North Korea
-  SY: [32, 37, 35, 42],      // Syria
-  YE: [12, 19, 42, 54],      // Yemen
-  SA: [16, 32, 34, 56],      // Saudi Arabia
-  TR: [36, 42, 26, 45],      // Turkey
-  PK: [23, 37, 60, 77],      // Pakistan
-  IN: [6, 36, 68, 97],       // India
-  CN: [18, 54, 73, 135],     // China
-  RU: [41, 82, 19, 180],     // Russia (simplified)
+  ID: [-11, 6, 95, 141],     // Indonesia (full archipelago from Sabang to Merauke)
 };
 const LOCATION_COUNTRY_CANDIDATES = Object.keys(TIER1_COUNTRIES);
 
@@ -339,10 +266,9 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 }
 
 const HOTSPOT_COUNTRY_MAP: Record<string, string> = {
-  tehran: 'IR', moscow: 'RU', beijing: 'CN', kyiv: 'UA', taipei: 'TW',
-  telaviv: 'IL', pyongyang: 'KP', riyadh: 'SA', ankara: 'TR', damascus: 'SY',
-  sanaa: 'YE', caracas: 'VE', dc: 'US', london: 'GB', brussels: 'FR',
-  baghdad: 'IR', beirut: 'IR', doha: 'SA', abudhabi: 'SA',
+  jakarta: 'ID', ikn: 'ID', papua: 'ID', natuna: 'ID', morowali: 'ID', bali: 'ID',
+  surabaya: 'ID', medan: 'ID', makassar: 'ID', bandung: 'ID',
+  semarang: 'ID', aceh: 'ID', maluku: 'ID',
 };
 
 const hotspotActivityMap = new Map<string, number>();
@@ -629,15 +555,15 @@ export function calculateCII(): CountryScore[] {
     const hotspotBoost = getHotspotBoost(code);
     const newsUrgencyBoost = components.information >= 70 ? 5
       : components.information >= 50 ? 3
-      : 0;
+        : 0;
     const focalUrgency = focalUrgencies.get(code);
     const focalBoost = focalUrgency === 'critical' ? 8
       : focalUrgency === 'elevated' ? 4
-      : 0;
+        : 0;
 
     const displacementBoost = data.displacementOutflow >= 1_000_000 ? 8
       : data.displacementOutflow >= 100_000 ? 4
-      : 0;
+        : 0;
     const climateBoost = data.climateStress;
 
     const blendedScore = baselineRisk * 0.4 + eventScore * 0.6 + hotspotBoost + newsUrgencyBoost + focalBoost + displacementBoost + climateBoost;
@@ -686,14 +612,14 @@ export function getCountryScore(code: string): number | null {
   const hotspotBoost = getHotspotBoost(code);
   const newsUrgencyBoost = components.information >= 70 ? 5
     : components.information >= 50 ? 3
-    : 0;
+      : 0;
   const focalUrgency = focalPointDetector.getCountryUrgency(code);
   const focalBoost = focalUrgency === 'critical' ? 8
     : focalUrgency === 'elevated' ? 4
-    : 0;
+      : 0;
   const displacementBoost = data.displacementOutflow >= 1_000_000 ? 8
     : data.displacementOutflow >= 100_000 ? 4
-    : 0;
+      : 0;
   const climateBoost = data.climateStress;
   const blendedScore = baselineRisk * 0.4 + eventScore * 0.6 + hotspotBoost + newsUrgencyBoost + focalBoost + displacementBoost + climateBoost;
 

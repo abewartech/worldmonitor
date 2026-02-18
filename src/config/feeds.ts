@@ -98,6 +98,17 @@ export const SOURCE_TIERS: Record<string, number> = {
   // Tier 3 - Regional/Specialty Startup Sources
   'EU Startups': 3,
   'Tech.eu': 3,
+
+  // Indonesia Specific Sources
+  'Antara': 1,       // Official state news agency
+  'Jakarta Post': 2, // Reliable English daily
+  'Kompas': 2,       // Major national daily
+  'Tempo': 2,        // Investigative journalism
+  'Setkab': 1,       // Cabinet Secretariat
+  'Kemlu': 1,        // Foreign Ministry
+  'Detik': 3,        // Popular aggregator/fast news
+  'CNBC Indonesia': 2,
+  'CNN Indonesia': 2,
   'Sifted (Europe)': 3,
   'The Next Web': 3,
   'Tech in Asia': 3,
@@ -349,6 +360,8 @@ export function isStateAffiliatedSource(sourceName: string): boolean {
 
 const FULL_FEEDS: Record<string, Feed[]> = {
   politics: [
+    { name: 'Antara', url: rss('https://www.antaranews.com/rss/top-news.xml') },
+    { name: 'Jakarta Post', url: rss('https://www.thejakartapost.com/c/headlines/feed') },
     { name: 'BBC World', url: rss('https://feeds.bbci.co.uk/news/world/rss.xml') },
     { name: 'NPR News', url: rss('https://feeds.npr.org/1001/rss.xml') },
     { name: 'Guardian World', url: rss('https://www.theguardian.com/world/rss') },
@@ -437,10 +450,22 @@ const FULL_FEEDS: Record<string, Feed[]> = {
     { name: 'UNHCR', url: rss('https://news.google.com/rss/search?q=site:unhcr.org+OR+UNHCR+refugees+when:3d&hl=en-US&gl=US&ceid=US:en') },
   ],
   regional: [
+    { name: 'Antara', url: rss('https://www.antaranews.com/rss/top-news.xml') },
+    { name: 'Kompas', url: rss('https://news.google.com/rss/search?q=site:kompas.com+when:1d&hl=id-ID&gl=ID&ceid=ID:id') },
+    { name: 'Tempo', url: rss('https://tempo.co/rss/terkini') },
     { name: 'Xinhua', url: rss('https://news.google.com/rss/search?q=site:xinhuanet.com+OR+Xinhua+when:1d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'TASS', url: rss('https://news.google.com/rss/search?q=site:tass.com+OR+TASS+Russia+when:1d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'Kyiv Independent', url: rss('https://news.google.com/rss/search?q=site:kyivindependent.com+when:3d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'Moscow Times', url: rss('https://www.themoscowtimes.com/rss/news') },
+  ],
+  indonesia: [
+    { name: 'Antara', url: rss('https://www.antaranews.com/rss/top-news.xml') },
+    { name: 'Jakarta Post', url: rss('https://www.thejakartapost.com/c/headlines/feed') },
+    { name: 'Tempo', url: rss('https://tempo.co/rss/terkini') },
+    { name: 'Kompas', url: rss('https://news.google.com/rss/search?q=site:kompas.com+when:1d&hl=id-ID&gl=ID&ceid=ID:id') },
+    { name: 'Setkab', url: rss('https://setkab.go.id/en/feed/') },
+    { name: 'Kemlu', url: rss('https://kemlu.go.id/portal/en/news/feed') },
+    { name: 'CNBC Indonesia', url: rss('https://www.cnbcindonesia.com/news/rss') },
   ],
   africa: [
     { name: 'Africa News', url: rss('https://news.google.com/rss/search?q=(Africa+OR+Nigeria+OR+Kenya+OR+"South+Africa"+OR+Ethiopia)+when:2d&hl=en-US&gl=US&ceid=US:en') },
@@ -455,6 +480,8 @@ const FULL_FEEDS: Record<string, Feed[]> = {
     { name: 'Guardian Americas', url: rss('https://www.theguardian.com/world/americas/rss') },
   ],
   asia: [
+    { name: 'Antara', url: rss('https://www.antaranews.com/rss/top-news.xml') },
+    { name: 'Jakarta Post', url: rss('https://www.thejakartapost.com/c/headlines/feed') },
     { name: 'Asia News', url: rss('https://news.google.com/rss/search?q=(China+OR+Japan+OR+Korea+OR+India+OR+ASEAN)+when:2d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'BBC Asia', url: rss('https://feeds.bbci.co.uk/news/world/asia/rss.xml') },
     { name: 'South China Morning Post', url: railwayRss('https://www.scmp.com/rss/91/feed/') },
