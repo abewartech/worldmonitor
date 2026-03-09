@@ -267,7 +267,7 @@ Rules:
 
   } catch (error) {
     console.error('[OpenRouter] Error:', error);
-    return new Response(JSON.stringify({ error: error.message, fallback: true }), {
+    return new Response(JSON.stringify({ error: 'Internal server error', fallback: true }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

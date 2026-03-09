@@ -265,8 +265,7 @@ Rules:
   } catch (error) {
     console.error('[Groq] Error:', error.name, error.message, error.stack?.split('\n')[1]);
     return new Response(JSON.stringify({
-      error: error.message,
-      errorType: error.name,
+      error: 'Internal server error',
       fallback: true
     }), {
       status: 500,
