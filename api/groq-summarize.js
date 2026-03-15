@@ -263,10 +263,9 @@ Rules:
     });
 
   } catch (error) {
-    console.error('[Groq] Error:', error.name, error.message, error.stack?.split('\n')[1]);
+    console.error('[Groq] Error:', error.name, error.message);
     return new Response(JSON.stringify({
-      error: error.message,
-      errorType: error.name,
+      error: 'An error occurred during summarization',
       fallback: true
     }), {
       status: 500,
