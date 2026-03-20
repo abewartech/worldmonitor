@@ -74,8 +74,9 @@ export default async function handler(req) {
         },
       });
     } catch (error) {
+      console.error('[Wingbits] Error:', error);
       return Response.json({
-        error: `Fetch failed: ${error.message}`,
+        error: `Fetch failed: Internal error`,
         icao24,
       }, {
         status: 500,
@@ -139,8 +140,9 @@ export default async function handler(req) {
         },
       });
     } catch (error) {
+      console.error('[Wingbits] Batch lookup error:', error);
       return Response.json({
-        error: `Batch lookup failed: ${error.message}`,
+        error: `Batch lookup failed: Internal error`,
       }, {
         status: 500,
         headers: corsHeaders,
@@ -181,7 +183,7 @@ export default async function handler(req) {
         console.error('[Wingbits] API error:', response.status, errorText);
         return Response.json({
           error: `Wingbits API error: ${response.status}`,
-          details: errorText,
+          details: 'Upstream error',
         }, {
           status: response.status,
           headers: corsHeaders,
@@ -200,7 +202,7 @@ export default async function handler(req) {
     } catch (error) {
       console.error('[Wingbits] Flights fetch error:', error);
       return Response.json({
-        error: `Fetch failed: ${error.message}`,
+        error: `Fetch failed: Internal error`,
       }, {
         status: 500,
         headers: corsHeaders,
@@ -244,9 +246,10 @@ export default async function handler(req) {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('[Wingbits] Batch API error:', response.status, errorText);
         return Response.json({
           error: `Wingbits API error: ${response.status}`,
-          details: errorText,
+          details: 'Upstream error',
         }, {
           status: response.status,
           headers: corsHeaders,
@@ -265,7 +268,7 @@ export default async function handler(req) {
     } catch (error) {
       console.error('[Wingbits] Batch flights error:', error);
       return Response.json({
-        error: `Fetch failed: ${error.message}`,
+        error: `Fetch failed: Internal error`,
       }, {
         status: 500,
         headers: corsHeaders,
@@ -287,8 +290,9 @@ export default async function handler(req) {
         headers: corsHeaders,
       });
     } catch (error) {
+      console.error('[Wingbits] Health check error:', error);
       return Response.json({
-        error: error.message,
+        error: 'Internal error',
         configured: true,
       }, {
         status: 500,

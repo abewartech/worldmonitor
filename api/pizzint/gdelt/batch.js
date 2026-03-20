@@ -38,7 +38,8 @@ export default async function handler(req) {
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch GDELT data', details: error.message }), {
+    console.error('[PizzINT] GDELT error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch GDELT data', details: 'Upstream error' }), {
       status: 502,
       headers: { 'Content-Type': 'application/json', ...cors },
     });
