@@ -28,7 +28,8 @@ export default async function handler(request) {
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to fetch PizzINT data', details: error.message }), {
+    console.error('[PizzINT] Error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch PizzINT data', details: 'Upstream error' }), {
       status: 502,
       headers: { 'Content-Type': 'application/json', ...cors },
     });
