@@ -75,7 +75,7 @@ export default async function handler(request) {
     const currentYear = new Date().getFullYear();
     const startYear = currentYear - parseInt(years);
 
-    const wbUrl = `https://api.worldbank.org/v2/country/${countryList}/indicator/${indicator}?format=json&date=${startYear}:${currentYear}&per_page=1000`;
+    const wbUrl = `https://api.worldbank.org/v2/country/${encodeURIComponent(countryList)}/indicator/${encodeURIComponent(indicator)}?format=json&date=${startYear}:${currentYear}&per_page=1000`;
 
     const response = await fetch(wbUrl, {
       headers: {

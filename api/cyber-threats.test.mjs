@@ -197,10 +197,16 @@ test('API aggregates from all 5 sources', async () => {
     geo: () => jsonResponse({ success: true, latitude: 40.0, longitude: -74.0, country_code: 'US' }),
   });
 
+  const baseNow = Date.parse('2026-02-15T12:00:00.000Z');
+  const originalDateNow = Date.now;
+  Date.now = () => baseNow;
+
   const response = await handler(makeRequest('/api/cyber-threats?limit=100&days=14', '198.51.100.20'));
   assert.equal(response.status, 200);
 
   const body = await response.json();
+  Date.now = originalDateNow;
+
   assert.equal(body.success, true);
   assert.equal(body.sources.feodo.ok, true);
   assert.equal(body.sources.urlhaus.ok, true);
