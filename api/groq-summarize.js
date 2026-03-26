@@ -263,9 +263,9 @@ Rules:
     });
 
   } catch (error) {
-    console.error('[Groq] Error:', error.name, error.message, error.stack?.split('\n')[1]);
+    console.error('[Groq] Error:', error.name, error.message);
     return new Response(JSON.stringify({
-      error: error.message,
+      error: 'An internal error occurred while summarizing',
       errorType: error.name,
       fallback: true
     }), {
