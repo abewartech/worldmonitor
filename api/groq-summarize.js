@@ -263,10 +263,11 @@ Rules:
     });
 
   } catch (error) {
-    console.error('[Groq] Error:', error.name, error.message, error.stack?.split('\n')[1]);
+    // Security: Do not log or leak stack traces or raw error details
+    console.error('[Groq] Error:', error.name, error.message);
     return new Response(JSON.stringify({
-      error: error.message,
-      errorType: error.name,
+      error: 'An internal error occurred during summarization',
+      errorType: 'internal',
       fallback: true
     }), {
       status: 500,
